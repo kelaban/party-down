@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    script src="/javascript/jquery.js"
+    script src="/javascript/underscore.js"
+    script src="/javascript/backbone.js"
+    title Home Jukebox
+    javascript:
+      $(function() {
+
+        $("#toggle").click(function(e){
+          e.preventDefault();
+          $.ajax({
+            url: "player/toggle",
+            type: "POST"
+          });
+        });
+
+        function show(msg){
+          $("#time").text(msg["current_pos"] + "/" + msg["length"]);
+        }
+
+          var ws = new WebSocket('ws://' + window.location.host + window.location.pathname);
+          ws.onopen    = function()  { show('websocket opened'); };
+          ws.onclose   = function()  { show('websocket closed'); }
+          ws.onmessage = function(m) { show($.parseJSON(m.data)); };
+      });
+
+  body
+    button#toggle-fake Do it!
+
+    p#time
+
+  script src="/javascript/application.js"

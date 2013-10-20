@@ -1,0 +1,57 @@
+doctype html
+html
+  head
+    meta name="viewport" content="width=device-width"
+    link href="/stylesheets/application.css" rel="stylesheet" type="text/css"
+    script src="/javascript/jquery.js"
+    script src="/javascript/underscore.js"
+    script src="/javascript/backbone.js"
+    script src="/javascript/backbone-relational.js"
+
+    title Home Jukebox
+  body
+    div#app
+      div#navigation
+        div#navContainer
+          h1#currentSection Artists
+          nav
+            ul
+              li#currentArtist class="clickable in" Artist
+              li#currentAlbum class="clickable in" Album
+      div#main
+        table#artists
+          tbody
+        table#albums class="in"
+          tbody
+        table#songs class="in"
+          thead
+            tr
+              th
+                div class="left" Track
+              th Title
+          tbody
+
+      div#player
+        p#status Paused
+
+    script#artistRowTemplate type="text/template"
+      <td data-id= <%= id %>>
+        <%= name %>
+      </td>
+
+    script#albumRowTemplate type="text/template"
+      <td data-id= <%= id %>>
+        <%= name %>
+      </td>
+
+    script#songRowTemplate type="text/template"
+      <td>
+        <%= track %>
+      </td>
+
+      <td data-id= "<%= id %>" data-location = "<%= location %>" >
+        <%= title %>
+      </td>
+
+
+    script src="/javascript/app.js"
