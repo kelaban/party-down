@@ -28,10 +28,11 @@ set :views, Proc.new { File.join(root, "app",  "views") }
 set :scss, Compass.sass_engine_options
 set :sass, Compass.sass_engine_options
 
-set :connections, []
-
 set :bind, '0.0.0.0'
 set :port, 4567
+
+
+set :connections, []
 
 player = Audite.new
 
@@ -71,15 +72,6 @@ end
 
 post '/player/toggle' do
   player.toggle
-  slim :index
-end
-
-get '/player/status' do
-  if player.active
-    "I'm playing"
-  else
-    "Play me!!!"
-  end
 end
 
 get '/artists' do
@@ -94,16 +86,21 @@ get '/artists/:artist_id/albums/:id/songs' do
  Jukebox::Album.get(params[:id]).songs.to_json(only: [:id, :title, :location, :track])
 end
 
+#Post to Player to play a new song
 post '/player' do
   player.stop_stream if player.active
   player.load(params[:path])
   player.start_stream
 end
 
+#Patch to player to update the current status of the player
+#Pause/Play
 patch '/player' do
   player.toggle
 end
 
+#Gets the current player status
+#useful to call when the client loads the page
 get '/player' do
   {playing: player.active}.to_json
 end

@@ -10,6 +10,7 @@ jQuery.noConflict();
 
     initialize: function(){
       this.set("playing", false);
+      this.set("nowPlaying", {});
     },
 
     play: function(song){
@@ -17,8 +18,9 @@ jQuery.noConflict();
         url: this.urlRoot,
         context: this,
         type: 'POST',
-        data:{path: song}
+        data:{path: song.get("location")}
       }).success(function(){
+       this.set("nowPlaying", song);
        this.set("playing", true);
       });
     },
@@ -112,11 +114,13 @@ jQuery.noConflict();
     el: "#player",
 
     events: {
-      "click #status": "toggleStatus"
+      "click #status": "toggleStatus",
+      "click #playerTab": "toggleQueue"
     },
 
     initialize: function(){
       this.listenTo(app.player, 'change:playing', this.setStatus);
+      this.listenTo(app.player, 'change:nowPlaying', this.setNowPlaying);
     },
 
     setStatus: function(){
@@ -130,8 +134,16 @@ jQuery.noConflict();
       }
     },
 
+    setNowPlaying: function(){
+      this.$("#nowSong").text(app.player.get("nowPlaying").get("title"));
+    },
+
     toggleStatus: function(){
       app.player.toggle();
+    },
+
+    toggleQueue: function(){
+      this.$el.toggleClass("expand");
     }
 
 
@@ -195,7 +207,7 @@ jQuery.noConflict();
 
 
     loadSong: function(){
-      app.player.play(this.model.get("location"))
+      app.player.play(this.model)
     }
 
   });

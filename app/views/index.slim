@@ -6,7 +6,6 @@ html
     script src="/javascript/jquery.js"
     script src="/javascript/underscore.js"
     script src="/javascript/backbone.js"
-    script src="/javascript/backbone-relational.js"
 
     title Home Jukebox
   body
@@ -16,24 +15,63 @@ html
           h1#currentSection Artists
           nav
             ul
-              li#currentArtist class="clickable in" Artist
-              li#currentAlbum class="clickable in" Album
+              li#currentArtist class="in" Artist
+              li#currentAlbum class="in" Album
       div#main
         table#artists
           tbody
         table#albums class="in"
           tbody
         table#songs class="in"
-          thead
-            tr
-              th
-                div class="left" Track
-              th Title
+          //thead
+           // tr
+            //  th#track #
+            //  th class="left" Title
           tbody
 
-      div#player
-        p#status Paused
 
+    div#player
+      div#playerTab
+        p
+      div#playerControls
+        div#nowPlaying
+          ul
+            li#nowArtist Choose A Song..
+            li#nowSong
+            li#noAlbum
+        div#controls
+          ul
+            li#seekLeft <
+            li#status Paused
+            li#seekRight >
+      div#queue
+        table
+          caption the queue goes here
+          tbody
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
+            tr
+              td Song One
     script#artistRowTemplate type="text/template"
       <td data-id= <%= id %>>
         <%= name %>
@@ -45,11 +83,11 @@ html
       </td>
 
     script#songRowTemplate type="text/template"
-      <td>
+      <td data-id= "<%= id %>" data-location = "<%= location %>"  class="short">
         <%= track %>
       </td>
 
-      <td data-id= "<%= id %>" data-location = "<%= location %>" >
+      <td>
         <%= title %>
       </td>
 
