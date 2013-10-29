@@ -1,5 +1,27 @@
 # README
 
+##PARTY.down
+
+About This app
+----------------
+WORK IN PROGRESS!!!
+
+using sinatra.rb, angular.js, and websockets
+
+This app is intended to be hosted on a raspberry Pi or the likes of it. It is (or will be) a server side
+music player that can be controlled from an client, keeping the queue in sync with websockets. I intend to
+continue this app to eventually feature multiple queues for multiple rooms and possibly to be configurable to some sort of
+nfs.
+
+Currently, running a script will index all of your musics metadata into a sqlite db which will be used
+to serve up all of the client side requests. This part of the app should eventually be pretty pluggable for
+what ever backend I feel neccessary.
+
+Next Features: Queueing, Refactoring code, Styling views to better fit mobile
+
+Next Next Features: Upload from client, Rooms, foobars
+
+
 ## TODO
 
 ### Features
