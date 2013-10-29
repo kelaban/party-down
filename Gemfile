@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'sinatra'
-gem 'audite'
+gem 'thin'
+gem 'audite', :path => "~/Documents/git/audite"
 gem 'slim'
 gem 'sinatra-websocket'
 gem 'taglib-ruby'

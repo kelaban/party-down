@@ -1,0 +1,9 @@
+<div id="main">
+  <table id="albums">
+    <tbody>
+      <tr ng-repeat="album in artist.albums">
+        <td><a href="#/artists/{{artist.id}}/albums/{{album.id}}">{{album.name}}</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

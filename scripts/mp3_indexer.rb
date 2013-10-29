@@ -41,7 +41,13 @@ ARGV.each do |arg|
       unless f.null?
         tag = f.tag
         artist = Jukebox::Artist.first_or_create({name: tag.artist})
-        album = Jukebox::Album.first_or_create({name: tag.album, artist: artist})
+        album = if tag.album.nil? || tag.album.strip == ""
+                  "Unknown Album"
+                else
+                  tag.album.strip
+                end
+
+        album = Jukebox::Album.first_or_create({name: album, artist: artist})
         song = Jukebox::Song.create!( {
                               title: tag.title,
                               location: file,

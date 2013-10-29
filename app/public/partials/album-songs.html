@@ -1,0 +1,10 @@
+<div id="main">
+  <table id="songs">
+    <tbody>
+      <tr ng-repeat="song in album.songs" >
+        <td class="short" ng-click="playSong(song)">{{song.track}}</td>
+        <td ng-click="playSong(song)">{{song.title}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

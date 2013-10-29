@@ -1,6 +1,6 @@
+require 'bundler/setup'
 require 'sinatra'
 require 'sinatra-websocket'
-require 'slim'
 require 'audite'
 require 'json'
 require 'sass'
@@ -21,86 +21,132 @@ DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/jukebox.db")
 # appropriate schemas
 DataMapper.finalize.auto_upgrade!
 
-set :root, File.dirname(__FILE__)
-set :static, true
-set :public_folder, Proc.new { File.join(root, "app",  "public") }
-set :views, Proc.new { File.join(root, "app",  "views") }
-set :scss, Compass.sass_engine_options
-set :sass, Compass.sass_engine_options
+class Jx < Sinatra::Base
+  set :root, File.dirname(__FILE__)
+  set :static, true
+  set :public_folder, Proc.new { File.join(settings.root, "app",  "public") }
+  set :views, Proc.new { File.join(settings.root, "app",  "views") }
+  set :scss, Compass.sass_engine_options
+  set :sass, Compass.sass_engine_options
 
-set :bind, '0.0.0.0'
-set :port, 4567
-
-
-set :connections, []
-
-player = Audite.new
+  set :bind, '0.0.0.0'
+  set :port, 4567
 
 
-Compass.configuration do |config|
-  config.project_path = File.dirname(__FILE__)
-  config.sass_dir = 'app/public/stylesheets'
-end
 
-player.events.on(:position_change) do |pos|
-  settings.connections.each do |ws|
-    ws.send({current_pos: player.position, length: player.length_in_seconds}.to_json)
+  set :logging, Logger::DEBUG
+
+  set :connections, []
+  set :current_song, nil
+  set :queue, []
+  set :player, Audite.new
+
+  Compass.configuration do |config|
+    config.project_path = File.dirname(__FILE__)
+    config.sass_dir = 'app/public/stylesheets'
   end
-end
 
-get '/stylesheets/:name.css' do
-  content_type 'text/css', :charset => 'utf-8'
-  scss(:"#{params[:name]}")
-end
+  def initialize
+    super
+    setup_player_hooks
+  end
 
-get '/' do
-  if !request.websocket?
-     #player.load(settings.mp3s + "/machine_gun.mp3")
-     slim :index
-  else
-    request.websocket do |ws|
-      ws.onopen do
-        settings.connections << ws
-      end
-      ws.onclose do
-        warn("wetbsocket closed")
-        settings.connections.delete(ws)
+  def websocket_send(event, msg)
+    settings.connections.each do |ws|
+      ws.send(msg.merge({event: event}).to_json)
+    end
+  end
+
+  def current_song_details
+  song = settings.current_song
+  return {} if song.nil?
+    {
+      album_id: song.album_id,
+      artist_id: song.artist_id,
+      id:  song.id,
+      song:  song.track,
+      artist:  song.artist.name,
+      album:  song.album.name,
+      title: song.title,
+    }
+  end
+
+  def setup_player_hooks
+    settings.player.events.on(:toggle) do |active|
+      websocket_send("player:toggle", {playing: active, song: current_song_details})
+    end
+
+    settings.player.events.on(:position_change) do |pos|
+      websocket_send("player:positionChange", {length: settings.player.length_in_seconds, current_pos: settings.player.position})
+    end
+  end
+
+  get '/stylesheets/:name.css' do
+    content_type 'text/css', :charset => 'utf-8'
+    scss(:"#{params[:name]}")
+  end
+
+  get '/' do
+    if !request.websocket?
+         erb :index
+    else
+      request.websocket do |ws|
+        ws.onopen do
+          logger.info "Websocket Opened"
+          settings.connections << ws
+        end
+        ws.onclose do
+          logger.info "Websocket Closed"
+          settings.connections.delete(ws)
+        end
       end
     end
   end
-end
 
-post '/player/toggle' do
-  player.toggle
-end
+  get '/artists' do
+   Jukebox::Artist.all.to_json(only: [:id, :name])
+  end
 
-get '/artists' do
- Jukebox::Artist.all.to_json(only: [:id, :name])
-end
+  get '/artists/:id' do
+    content_type 'application/json'
+    Jukebox::Artist.get(params[:id]).to_json(methods: [:albums])
+  end
 
-get '/artists/:id/albums' do
- Jukebox::Artist.get(params[:id]).albums.to_json(only: [:id, :name])
-end
-
-get '/artists/:artist_id/albums/:id/songs' do
- Jukebox::Album.get(params[:id]).songs.to_json(only: [:id, :title, :location, :track])
-end
+  get '/artists/:artist_id/albums/:id' do
+    content_type 'application/json'
+    Jukebox::Album.get(params[:id]).to_json(methods: [:songs])
+  end
 
 #Post to Player to play a new song
-post '/player' do
-  player.stop_stream if player.active
-  player.load(params[:path])
-  player.start_stream
-end
+  post '/player' do
+    params = JSON.parse(request.body.read, symbolize_names: true)
+    settings.current_song = Jukebox::Song.get(params[:song])
+    settings.player.stop_stream
+    settings.player.load(settings.current_song.location)
+    settings.player.start_stream
+    200
+  end
 
-#Patch to player to update the current status of the player
-#Pause/Play
-patch '/player' do
-  player.toggle
-end
+  post '/player/toggle' do
+    settings.player.toggle
+    200
+  end
+
+  post '/player/seek' do
+    params = JSON.parse(request.body.read, symbolize_names: true)
+    settings.player.seek(params[:seconds])
+    200
+  end
 
 #Gets the current player status
 #useful to call when the client loads the page
-get '/player' do
-  {playing: player.active}.to_json
+  get '/player' do
+    content_type 'application/json'
+    {song: current_song_details}.to_json
+  end
+
+# start the server if ruby file executed directly
+ run! if app_file == $0
 end
+
+

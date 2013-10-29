@@ -1,5 +1,6 @@
 $green: rgb(116, 183, 63);
 $background: white;
+$orange: #fd8500;
 
 body {
   font-family: Gibson-Regular, Arial;
@@ -7,6 +8,15 @@ body {
   margin: 0px;
   padding: 0px;
 }
+
+a {
+  font-size: 100%;
+  font: inherit;
+  text-decoration: inherit;
+  color: inherit;
+}
+
+
 
 .in {
   display: none;
@@ -51,17 +61,14 @@ body {
 
 
       li {
-        cursor: pointer;
         padding-bottom: 5px;
         letter-spacing: -1px;
-        &:after {
-          content: "";
-          padding-right: 20px;
-        }
-        &:hover {
-          font-weight:bold;
-        }
       }
+
+      a:hover {
+        font-weight:bold;
+      }
+
       #currentAlbum:before {
         content: "albums >";
         padding-right: 5px;
@@ -82,18 +89,17 @@ body {
   position:fixed;
   left:0px;
   bottom:0px;
-  max-height:5%;
   width:100%;
+  height: 60px;
+  padding-bottom: 10px;
   z-index: 1;
   background: $background;
-  text-align: center;
-  padding-bottom: 20px;
-  height: auto;
 
-  transition: max-height 0.8s ease-out;
-  -webkit-transition: max-height 0.8s ease-out;
+
+  transition: height 0.8s ease-out;
+  -webkit-transition: height 0.8s ease-out;
   &.expand {
-    max-height: 100%;
+    height: 90%;
 
     #playerTab p{
       margin: 0px 0px 0px 0px;
@@ -106,32 +112,45 @@ body {
   #playerControls{
     border-top-style: solid;
     border-width: 2px;
-    ul li {
-      display: inline;
-      padding: 0px 30px;
-      cursor: pointer;
+    height: 100%;
+    width: 100%;
+  }
+
+
+  ul {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  li {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  #nowPlaying {
+    display: block;
+    float: left;
+    clear: both;
+    backrgound-color: $background;
+    li {
+      display: block;
+      text-align: left;
     }
   }
 
   #controls {
-    display: inline-block;
-    float: left;
-  }
-
-  #nowPlaying{
-    display: inline-block;
-    float: left;
-    height: 20px;
-    width: 500px;
-    z-index: 999;
-    backrgound-color: $background;
-
-    p {
-      text-align: left;
-      margin: 10px 0px 0px 0px;
+    display: block;
+    margin: auto;
+    li {
+      display: inline;
     }
-
+    padding-bottom: 10px;
   }
+
+  #queue {
+    clear:both;
+  }
+
   #playerTab{
     position: absolute;
     right: 0px;
@@ -158,15 +177,15 @@ body {
 }
 
 td.short {
-  width: 1px;
+  width: 10px;
 }
+
 #main {
-  position: relative;
-  top: 90px;
-  bottom: 20px;
+  position: absolute;
+  top: 100px;
+  bottom: 120px;
   width: 100%;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  overflow-x: hidden;
   table {
     width: 100%;
     border-spacing:0;
@@ -178,14 +197,19 @@ td.short {
       border-color: $background;
       letter-spacing: 1px;
 
+      td {
+        padding: 7px 7px 7px 2px;
+      }
+
       &:hover {
         border-style: double;
         border-width: 1px;
         border-color: $green;
       }
 
-      td {
-        padding: 7px;
+      a {
+        display: block;
+        width: 100%;
       }
     }
     th {
@@ -195,3 +219,51 @@ td.short {
     }
   }
 }
+
+
+#player {
+    height: 100px;
+    width: 100%;
+    border-style-top: solid;
+    //border-color: grey;
+
+    margin-top: 20px;
+}
+
+#progressionBar {
+  position: relative;
+  height: 7px;
+  width: 80%;
+  top: -3px;
+  left: 0px;
+
+  cursor: pointer;
+
+}
+
+#slider {
+  position: absolute;
+  height: 100%;
+  width: 0px;
+
+  background-color: $orange;
+}
+
+#sliderHead {
+
+  position: absolute;
+  height: 17px;
+  width: 17px;
+
+  left: 0;
+
+  margin-top: -5px;
+  margin-left: -1px;
+
+  border-radius: 10px;
+
+  background-color: $orange;
+
+  cursor: pointer;
+}
+

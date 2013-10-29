@@ -1,0 +1,67 @@
+<html lang="en" ng-app="jukeboxApp">
+  <head>
+    <meta name="viewport" content="width=device-width">
+    <link href="/stylesheets/application.css" rel="stylesheet" type="text/css">
+    <script src="/javascript/lib/jquery/jquery.js"></script>
+    <script src="/javascript/lib/angular/angular.js"></script>
+    <script src="/javascript/lib/angular/angular-resource.js"></script>
+    <script src="/javascript/lib/angular/angular-route.js"></script>
+    <script src="/javascript/app.js"></script>
+    <script src="/javascript/controllers.js"></script>
+    <script src="/javascript/services.js"></script>
+    <script src="/javascript/directives.js "></script>
+  </head>
+
+  <body>
+    <div id="app">
+      <div ng-controller="NavCtrl" id="navigation">
+        <div id="navContainer">
+          <h1 id="currentSection">{{route.current.scope.title}}</h1>
+          <nav>
+            <ul>
+              <li>
+                <a ng-hide="route.current.scope.title == 'Artists'" id="currentArtist" href="#/artists">
+                  {{route.current.scope.artist.name}}
+                </a>
+              </li>
+              <li>
+                <a ng-show="route.current.scope.title == 'Songs'" id="currentAlbum" href="#/artists/{{route.current.scope.artist.id}}">
+                  {{route.current.scope.album.name}}
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div ng-view ></div>
+
+      <div ng-controller="PlayerCtrl" id="player">
+        <div id="playerTab"></div>
+        <div id="playerControls">
+          <progress-bar></progress-bar>
+          <div id="controls">
+            <ul>
+              <li id="seekLeft"> lt </li>
+              <li id="status" ng-click="playerToggle()">{{ player.playing ? 'Pause' : 'Play' }}</li>
+              <li id="seekRight"> gt </li>
+            </ul>
+          </div>
+          <div id="nowPlaying">
+            <ul>
+              <li id="nowArtist">{{player.song.artist}}</li>
+              <li id="nowSong">{{player.song.title}}</li>
+              <li id="noAlbum">{{player.song.album}}</li>
+            </ul>
+          </div>
+        </div>
+        <div id="queue">
+          <table>
+            <caption> the queue goes here</caption>
+            <tbody>
+        <div>
+      </div>
+    </div>
+
+  </body>
+</html>
