@@ -1,33 +1,42 @@
 <div id="app">
   <div ng-controller="NavCtrl" id="navigation">
     <div id="navContainer">
-      <h1 id="currentSection">{{title}}</h1>
+      <h1 id="currentSection">{{route.current.scope.title}}</h1>
       <nav>
         <ul>
-          <li><a ng-hide="artist == undefined" id="currentArtist" href="#/artists">{{artist.name}}</a></li>
-          <li><a ng-hide="album == undefined" id="currentAlbum" href="#/artists/{{artist.id}}">{{album.name}}</a></li>
+          <li>
+            <a ng-hide="route.current.scope.title == 'Artists'" id="currentArtist" href="#/artists">
+              {{route.current.scope.artist.name}}
+            </a>
+          </li>
+          <li>
+            <a ng-show="route.current.scope.title == 'Songs'" id="currentAlbum" href="#/artists/{{route.current.scope.artist.id}}">
+              {{route.current.scope.album.name}}
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
   </div>
 
-  <div ng-view></div>
+  <div ng-view ></div>
 
-  <div id="player">
-    <div id="playerTab"></div>
+  <div ng-controller="PlayerCtrl" id="player">
+<!--        <div id="playerTab"></div> -->
     <div id="playerControls">
-      <div id="nowPlaying">
-        <ul>
-          <li id="nowArtist"> Choose A Song..</li>
-          <li id="nowSong"></li>
-          <li id="noAlbum"></li>
-        </ul>
-      </div>
+      <progress-bar></progress-bar>
       <div id="controls">
         <ul>
           <li id="seekLeft"> lt </li>
-          <li id="status"> Paused </li>
+          <li id="status" ng-click="playerToggle()">{{ player.playing ? 'Pause' : 'Play' }}</li>
           <li id="seekRight"> gt </li>
+        </ul>
+      </div>
+      <div id="nowPlaying">
+        <ul>
+          <li id="nowArtist">{{player.song.artist}}</li>
+          <li id="nowSong">{{player.song.title}}</li>
+          <li id="noAlbum">{{player.song.album}}</li>
         </ul>
       </div>
     </div>

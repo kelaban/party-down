@@ -1,7 +1,8 @@
 <html lang="en" ng-app="jukeboxApp">
   <head>
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=320, user-scalable=false">
     <link href="/stylesheets/application.css" rel="stylesheet" type="text/css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
     <script src="/javascript/lib/jquery/jquery.js"></script>
     <script src="/javascript/lib/angular/angular.js"></script>
     <script src="/javascript/lib/angular/angular-resource.js"></script>
@@ -37,14 +38,21 @@
       <div ng-view ></div>
 
       <div ng-controller="PlayerCtrl" id="player">
-        <div id="playerTab"></div>
+    <!--        <div id="playerTab"></div> -->
         <div id="playerControls">
           <progress-bar></progress-bar>
           <div id="controls">
             <ul>
-              <li id="seekLeft"> lt </li>
-              <li id="status" ng-click="playerToggle()">{{ player.playing ? 'Pause' : 'Play' }}</li>
-              <li id="seekRight"> gt </li>
+              <li id="seekLeft">
+                <i class="fa fa-step-backward fa-2x"></i>
+              </li>
+              <li id="status" ng-click="playerToggle()">
+                <i class="fa fa-pause fa-2x" ng-show="player.playing"></i>
+                <i class="fa fa-play fa-2x" ng-hide="player.playing"></i>
+              </li>
+              <li id="seekRight">
+                <i class="fa fa-step-forward fa-2x"></i>
+              </li>
             </ul>
           </div>
           <div id="nowPlaying">
@@ -62,6 +70,5 @@
         <div>
       </div>
     </div>
-
   </body>
 </html>

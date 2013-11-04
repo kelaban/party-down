@@ -1,9 +1,9 @@
 $green: rgb(116, 183, 63);
-$background: white;
+$background: white; // rgb(229,229,229);
 $orange: #fd8500;
 
 body {
-  font-family: Gibson-Regular, Arial;
+  font-family: Gibson-Regular, Arial, sans-serif;
   color: $green;
   margin: 0px;
   padding: 0px;
@@ -128,22 +128,38 @@ a {
   }
 
   #nowPlaying {
-    display: block;
-    float: left;
-    clear: both;
+    //display: block;
+    position:absolute;
+    top: -45px;
+    height: 45px;
+    overflow-x: hidden;
     backrgound-color: $background;
     li {
-      display: block;
+      display: inline;
       text-align: left;
+      font-style: italic;
+      &:after {
+        content: "-";
+        padding: 0px 5px;
+      }
+      &:last-child:after{
+        content: "";
+      }
     }
   }
 
   #controls {
     display: block;
     margin: auto;
+    text-align: center;
     li {
       display: inline;
+      padding: 30px
     }
+    ul {
+      margin-top: 20px
+    }
+
     padding-bottom: 10px;
   }
 
@@ -186,6 +202,7 @@ td.short {
   bottom: 120px;
   width: 100%;
   overflow-x: hidden;
+  background-color: $background;
   table {
     width: 100%;
     border-spacing:0;
@@ -202,9 +219,9 @@ td.short {
       }
 
       &:hover {
-        border-style: double;
-        border-width: 1px;
-        border-color: $green;
+        //border-style: double;
+        //border-width: 1px;
+        //border-color: $green;
       }
 
       a {
@@ -221,23 +238,14 @@ td.short {
 }
 
 
-#player {
-    height: 100px;
-    width: 100%;
-    border-style-top: solid;
-    //border-color: grey;
-
-    margin-top: 20px;
-}
-
 #progressionBar {
   position: relative;
   height: 7px;
-  width: 80%;
+  width: 303px;
   top: -3px;
-  left: 0px;
 
   cursor: pointer;
+  z-index: 999;
 
 }
 
